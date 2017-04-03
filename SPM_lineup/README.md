@@ -1,4 +1,4 @@
-#For comparison of the MRSpeCS results (FSL) with SPM
+# For comparison of the MRSpeCS results (FSL) with SPM
 
 !!! EXPERTS ONLY (become one;)
 
@@ -11,12 +11,12 @@
 tested on Matlab R2015a with SPM8
 
 ##
-###Requirements:
+### Requirements:
    - Matlab (free 30 days trial at https://www.mathworks.com/programs/trials)
    - SPM (http://www.fil.ion.ucl.ac.uk/spm/)
 
 ##
-###Acknowledgments:
+### Acknowledgments:
    "SPM_Segment2.m" is based on code kindly provided by Paul G Mullins from
    Bangor University (UK) https://www.bangor.ac.uk/psychology/biu
 
