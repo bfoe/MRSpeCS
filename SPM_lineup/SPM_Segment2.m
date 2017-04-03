@@ -1,6 +1,8 @@
 function SPM_Segment2
 
-% This uses the standard segmentation from SPM, also available through its GUI
+% This script uses T1.nii and SpectroBox.nii files calculated by MRSpeCS 
+% and applies the two available segmentation methods from SPM.
+% Use to compare results from different Segmentation methods (FSL, SPM Standard, SPM New) 
 
 
 %find SPM
@@ -18,9 +20,9 @@ if boxFile==0; error ('ERROR:  No T1 SpectroBox file specified'); end;
 % --------------------------------------------------------------
 % Here starts the code for the SPM Standard Segmentation method.
 % The parameters below are the default parameters from the GUI 
-% plus Cerebro-Spinal-Fuid enabled (in Native Space)
+% plus Cerebro-Spinal-Fluid enabled (in Native Space)
 % In the GUI you can find this under:
-% spm fmri, second line from top, all right, button "Segment"
+% spm fmri, second line from top, rightmost, button "Segment"
 % --------------------------------------------------------------
 
 % parameters for SPM Segment
@@ -82,7 +84,7 @@ movefile ([t1Path 'c3' t1File], [t1Path 'T1_CSF_SPMsegment.nii']);
 
 
 % --------------------------------------------------------------
-% Here starts the code for the SPM Standard Segmentation method.
+% Here starts the code for the SPM New Segmentation method.
 % The parameters below are the default parameters from the GUI 
 % but saving the Skull and Other tissue images is disabled.
 % To find this in the GUI, follow the steps as above and in the 
