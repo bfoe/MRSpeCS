@@ -5,15 +5,23 @@ function SPM_Segment2
 % Use to compare results from different Segmentation methods (FSL, SPM Standard, SPM New) 
 
 
-%find SPM
+% find SPM
 [SPMPath , ~, ~] = fileparts(which('spm')); SPMPath = [SPMPath '/'];
-if SPMPath == '/'; error('Error: no SPM installation found'); end;
-% read files
+if SPMPath == '/', error_('ERROR:  no SPM installation found'); end
+% choose T1 image
 [t1File,t1Path]=uigetfile('*.nii','Select T1 image');
-if t1File==0; error ('ERROR:  No T1 image file specified'); end;
+if t1File==0, error_ ('ERROR:  No T1 image file specified'); end
+try spm_vol([t1Path t1File]); % check if this opens
+catch, error_ ('ERROR opening T1 image file'); end % display error if not
 cd(t1Path)
+% choose Spectro Box
 [boxFile,boxPath]=uigetfile('*.nii','Select Spectro Box');
-if boxFile==0; error ('ERROR:  No T1 SpectroBox file specified'); end;
+if boxFile==0, error_ ('ERROR:  No T1 SpectroBox file specified'); end
+try spm_vol([boxPath boxFile]); % check if this opens
+catch, error_ ('ERROR opening SpectroBox file'); end % display error if not
+
+
+
 
 
 
@@ -25,8 +33,11 @@ if boxFile==0; error ('ERROR:  No T1 SpectroBox file specified'); end;
 % spm fmri, second line from top, rightmost, button "Segment"
 % --------------------------------------------------------------
 
+% open window with progress chart
+Finter = spm('CreateIntWin','on');
+Finter.Name = 'Running Standard Segmentation';
 % parameters for SPM Segment
-disp (sprintf('\nRunning ''Segment'' (SPM standard)\n'))
+fprintf('\nRunning ''Segment'' (SPM standard)\n');
 writeOpts.GM  = [0 0 1]; % GM native
 writeOpts.WM  = [0 0 1]; % WM native
 writeOpts.CSF = [0 0 1]; % CSF native
@@ -46,6 +57,8 @@ Vimg      = spm_vol([t1Path, t1File]);
 results   = spm_preproc(Vimg,segmOpts);
 [po,~] = spm_prep2sn(results);
 spm_preproc_write(po,writeOpts);
+% close window with progress chart
+spm_figure('close',allchild(0));
 
 % analyse segmentation results
 V_CSF  = spm_vol([t1Path 'c3' t1File]);
@@ -57,10 +70,13 @@ gm_mat  = (V_GM.private.dat(:,:,:)  .* V_mask.private.dat(:,:,:));
 wm_mat  = (V_WM.private.dat(:,:,:)  .* V_mask.private.dat(:,:,:));
 n_zero_mask = sum(sum(sum(V_mask.private.dat(:,:,:)~=0))); % number of voxels in mask that are not 0
 n_one_mask  = sum(sum(sum(V_mask.private.dat(:,:,:)==1))); % number of voxels in mask that are 1
-if n_zero_mask ~= n_one_mask; error('Error in mask, there are voxels that are neiter 0 nor 1'); end
+if n_zero_mask ~= n_one_mask, error_('ERROR in mask, there are voxels that are neiter 0 nor 1'); end
 csf = sum(sum(sum(csf_mat)))/n_zero_mask;
 gm  = sum(sum(sum(gm_mat)))/n_zero_mask;
 wm  = sum(sum(sum(wm_mat)))/n_zero_mask;
+if gm+wm+csf>1.2 || gm+wm+csf<0.8 % allow for a 20% variation, this is already pretty large
+   warning_('Warning: raw GM/WM/CSF fractions don''t sum up to 1, check the segmentation output images '); 
+end;
 csf_per = csf / (gm+wm+csf); disp (['csf_per = ' num2str(csf_per)]);
 gm_per  = gm  / (gm+wm+csf); disp (['gm_per  = ' num2str(gm_per)]);
 wm_per  = wm  / (gm+wm+csf); disp (['wm_per  = ' num2str(wm_per)]);
@@ -93,7 +109,9 @@ movefile ([t1Path 'c3' t1File], [t1Path 'T1_CSF_SPMsegment.nii']);
 % 
 % -------------------------------------------------------------
 
-
+% open window with progress chart
+Finter = spm('CreateIntWin','on');
+Finter.Name = 'Running New Segmentation';
 % the "New Segment" method still uses jobman
 % see spm8/toolbox/seg/spm_preproc_run.m on how to take it outathere
 % don't mixitup with spm8/config/spm_run_preproc.m, that's for
@@ -134,6 +152,8 @@ matlabbatch{1}.spm.tools.preproc8.warp.affreg = 'mni';
 matlabbatch{1}.spm.tools.preproc8.warp.samp = 3;
 matlabbatch{1}.spm.tools.preproc8.warp.write = [0 0];
 spm_jobman('run',matlabbatch)
+% close window with progress chart
+spm_figure('close',allchild(0));
 
 % analyse segmentation results
 V_CSF  = spm_vol([t1Path 'c3' t1File]);
@@ -145,10 +165,13 @@ gm_mat  = V_GM.private.dat(:,:,:)  .* V_mask.private.dat(:,:,:);
 wm_mat  = V_WM.private.dat(:,:,:)  .* V_mask.private.dat(:,:,:);
 n_zero_mask = sum(sum(sum(V_mask.private.dat(:,:,:)~=0))); % number of voxels in mask that are not 0
 n_one_mask  = sum(sum(sum(V_mask.private.dat(:,:,:)==1))); % number of voxels in mask that are 1
-if n_zero_mask ~= n_one_mask; error('Error in mask, there are voxels that are neiter 0 nor 1'); end
+if n_zero_mask ~= n_one_mask, error_('ERROR in mask, there are voxels that are neiter 0 nor 1'); end
 csf = sum(sum(sum(csf_mat)))/n_zero_mask;
 gm  = sum(sum(sum(gm_mat)))/n_zero_mask;
 wm  = sum(sum(sum(wm_mat)))/n_zero_mask;
+if gm+wm+csf>1.2 || gm+wm+csf<0.8 % allow for a 20% variation, this is already pretty large
+   warning_('Warning: raw GM/WM/CSF fractions don''t sum up to 1, check the segmentation output images '); 
+end;
 csf_per = csf / (gm+wm+csf); disp (['csf_per = ' num2str(csf_per)]);
 gm_per  = gm  / (gm+wm+csf); disp (['gm_per  = ' num2str(gm_per)]);
 wm_per  = wm  / (gm+wm+csf); disp (['wm_per  = ' num2str(wm_per)]);
@@ -170,4 +193,31 @@ movefile ([t1Path 'c2' t1File], [t1Path 'T1_WM_SPMnewSegment.nii']);
 movefile ([t1Path 'c3' t1File], [t1Path 'T1_CSF_SPMnewSegment.nii']);
 [~, basename, ~]=fileparts([t1Path t1File]);
 delete([t1Path basename '_seg8.mat']);
+
+%done
+fprintf('\ndone\n');
+if isdeployed % Standalone
+    fprintf('Press any key to continue ...\n'); 
+    pause;
+end %if
+end %SPM_Segment2
+
+
+%------------------------- subfunctions ---------------------------------
+
+function error_ (msg)
+if isdeployed % Standalone
+    fprintf([msg '\n']);
+    fprintf('Press any key to continue ...\n'); 
+    pause;
+end %if
+error (msg)
+end %error_
+
+function warning_ (msg)
+fprintf([msg '\n']);
+fprintf('Press any key to continue ...\n'); 
+pause;
+disp(' ');
+end %warning_
 
