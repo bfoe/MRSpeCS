@@ -77,11 +77,11 @@ wm  = sum(sum(sum(wm_mat)))/n_zero_mask;
 if gm+wm+csf>1.2 || gm+wm+csf<0.8 % allow for a 20% variation, this is already pretty large
    warning_('Warning: raw GM/WM/CSF fractions don''t sum up to 1, check the segmentation output images '); 
 end;
-csf_per = csf / (gm+wm+csf); disp (['csf_per = ' num2str(csf_per)]);
-gm_per  = gm  / (gm+wm+csf); disp (['gm_per  = ' num2str(gm_per)]);
-wm_per  = wm  / (gm+wm+csf); disp (['wm_per  = ' num2str(wm_per)]);
+csf_per = csf / (gm+wm+csf); fprintf('   CSF:   %f\n', csf_per);
+gm_per  = gm  / (gm+wm+csf); fprintf('    GM:   %f\n', gm_per);
+wm_per  = wm  / (gm+wm+csf); fprintf('    WM:   %f\n', wm_per);
 WCONC   =  floor((gm_per*43300. + wm_per*35880. + csf_per*55556.)/(1.-csf_per));
-disp (['WCONC   = ' num2str(WCONC)]);
+fprintf(' WCONC:   %d\n', WCONC);
 
 % write values to file
 fileID=fopen([t1Path 'SPM_SegmentSTD_Results.txt'],'w');
@@ -172,11 +172,11 @@ wm  = sum(sum(sum(wm_mat)))/n_zero_mask;
 if gm+wm+csf>1.2 || gm+wm+csf<0.8 % allow for a 20% variation, this is already pretty large
    warning_('Warning: raw GM/WM/CSF fractions don''t sum up to 1, check the segmentation output images '); 
 end;
-csf_per = csf / (gm+wm+csf); disp (['csf_per = ' num2str(csf_per)]);
-gm_per  = gm  / (gm+wm+csf); disp (['gm_per  = ' num2str(gm_per)]);
-wm_per  = wm  / (gm+wm+csf); disp (['wm_per  = ' num2str(wm_per)]);
-WCONC =  floor((gm_per*43300. + wm_per*35880. + csf_per*55556.)/(1.-csf_per));
-disp (['WCONC   = ' num2str(WCONC)]);
+csf_per = csf / (gm+wm+csf); fprintf('   CSF:   %f\n', csf_per);
+gm_per  = gm  / (gm+wm+csf); fprintf('    GM:   %f\n', gm_per);
+wm_per  = wm  / (gm+wm+csf); fprintf('    WM:   %f\n', wm_per);
+WCONC   =  floor((gm_per*43300. + wm_per*35880. + csf_per*55556.)/(1.-csf_per));
+fprintf(' WCONC:   %d\n', WCONC);
 
 % write values to file
 fileID=fopen([t1Path 'SPM_SegmentNEW_Results.txt'],'w');
@@ -218,6 +218,6 @@ function warning_ (msg)
 fprintf([msg '\n']);
 fprintf('Press any key to continue ...\n'); 
 pause;
-disp(' ');
+fprintf('\n');
 end %warning_
 
