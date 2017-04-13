@@ -165,10 +165,14 @@ from getopt import GetoptError
 from distutils.version import LooseVersion
 
 TK_installed=True
-try: from tkFileDialog import askopenfilename
-except: TK_installed=False
-try: import Tkinter as tk
-except: TK_installed=False
+try: from tkFileDialog import askopenfilename # Python 2
+except: 
+  try: from tkinter.filedialog import askopenfilename; # Python3
+  except: TK_installed=False
+try: import Tkinter as tk; # Python2
+except: 
+  try: import tkinter as tk; # Python3
+  except: TK_installed=False
 
 FNULL = open(os.devnull, 'w')
 old_target, sys.stderr = sys.stderr, FNULL # replace sys.stdout 
@@ -589,7 +593,8 @@ if not NIFTI_Input:
     except: lprint ('ERROR:  Problem copying DICOM File '); exit(1)
     # convert DICOM file to NIFTI
     command=resourcedir+'dcm2nii'; checkcommand(command)    
-    parameters=' -d N -e N -i N -p N -f Y -g N -n Y "'+tempdir+'"'
+    parameters  = ' -4 Y -3 N -a Y -c Y -d N -e N -f Y -g N -i N -k 0 -l N'
+    parameters += ' -m N -n Y -p N -r Y -t N -v Y -x N "'+tempdir+'"'
     run(command, parameters)
     # dcm2nii "o" files are in neurological orientation
     # switch to radiological

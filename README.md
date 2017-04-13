@@ -4,8 +4,8 @@ MR Spectro Compartment Segmentation
 The Software takes the geometry information from a Single Voxel 
 Spectroscopy dataset and a Volumetric 3D image with T1 contrast
 and calculates CSF/GM/WM fractions intended to be used as 
-proton density correction factors in quantitative MR spectrospcopy.
-Find a very usefull introduction to the subject at: 
+proton density correction factors in quantitative MR spectroscopy.
+Find a very useful introduction to the subject at: 
 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4849426/
 
 
@@ -30,6 +30,15 @@ depending on FSL version.
     MRSpeCS.py --img=<inputimage> --spec=<inputspectro>
     MRSpeCS.py --help
 
+##
+### MR data:    
+    Spectro: Philips SPAR format
+             Philips DICOM format(spectra are in files called XX*)
+    Images:  Philips enhanced DICOM (aka multiframe DICOM, one file per scan)
+             NIFTI images manually converted from DICOM using the `dcm2nii` tool
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;![#f03c15](https://placehold.it/15/f03c15/000000?text=+) <b> Currently supports Philips formats only </b> ![#f03c15](https://placehold.it/15/f03c15/000000?text=+)
+
+    
 ##
 ### License:
 GPL, see details inside `MRSpeCS.py`

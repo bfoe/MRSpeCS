@@ -7,16 +7,6 @@ a = Analysis(['..\MRSpeCS.py'],
              hookspath=None,
              runtime_hooks=None)
              
-def addMCR():
-    import os
-    import fnmatch
-    extraDatas = []
-    source='MCRv717'
-    for root, dirnames, filenames in os.walk(source):
-        for filename in fnmatch.filter(filenames, '*'):    
-            extraDatas.append((os.path.join(root, filename), os.path.join(root, filename), 'DATA'))
-    return extraDatas             
-             
 for d in a.datas:
     if 'pyconfig' in d[0]: 
         a.datas.remove(d)
