@@ -23,7 +23,6 @@ a.binaries += [('cygwin1.dll', 'cygwin1.dll', 'DATA')]
 a.binaries += [('dcm2nii.exe', 'dcm2nii.exe', 'DATA')]
 a.binaries += [('fast.exe', 'fast.exe', 'DATA')]
 a.binaries += [('flirt.exe', 'flirt.exe', 'DATA')]
-a.datas += addMCR()
 a.datas = [x for x in a.datas if not ('mpl-data\\fonts' in os.path.dirname(x[1]))]                     
 a.datas = [x for x in a.datas if not ('mpl-data\fonts' in os.path.dirname(x[1]))]                     
 a.datas = [x for x in a.datas if not ('mpl-data\\sample_data' in os.path.dirname(x[1]))]            
