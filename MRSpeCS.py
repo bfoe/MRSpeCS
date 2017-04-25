@@ -247,7 +247,7 @@ def reset_NIFTI_header (filename):
     run(command,parameters)
     # set image center
     parameters=' -getqform '+filename
-    output = run(command, parameters).rstrip('\n').split(' ')
+    output = run(command, parameters).decode('ascii').rstrip('\n').split(' ')
     output[3] =str( Image_center_X*Image_Resolution_X)
     output[7] =str(-Image_center_Y*Image_Resolution_Y)
     output[11]=str(-Image_center_Z*Image_Resolution_Z)
@@ -274,7 +274,7 @@ def isDICOM (file): # borrowed from linux' file command's magic pattern file
         test = f.read(4) # this should be "DICM"
         f.close()
     except: return False # on error probably not a DICOM file
-    if test == "DICM": return True 
+    if test.decode('ascii') == 'DICM': return True 
     else: return False
 def _vax_to_ieee_single_float(data): # borrowed from the python VeSPA project
     #Converts a float in Vax format to IEEE format.
@@ -406,8 +406,8 @@ else:
     except: fsldir='/usr/local/fsl'; my_env["FSLDIR"] = fsldir # best guess
     resourcedir = os.path.abspath(fsldir+'/bin')+slash
     if not os.path.isdir(resourcedir): 
-        print 'ERROR: FSL not found, '
-        print 'set the FSLDIR environment variable to point to the FSL installation directory\n'
+        print ('ERROR: FSL not found, ')
+        print ('set the FSLDIR environment variable to point to the FSL installation directory\n')
         exit(2)
 if TK_installed:        
     TKwindows = tk.Tk(); TKwindows.withdraw() #hiding tkinter window
@@ -426,7 +426,7 @@ if TK_installed:
 
 # parse commandline parameters (if present)
 try: opts, args =  getopt( sys.argv[1:],'hd',['help','version','debug','img=','spec=','outdir=','noseg'])
-except GetoptError, error: 
+except: 
     lprint ('ERROR: Commandline '+str(error)+' (see logfile for details)')
     if "-" in str(error) and not "--" in str(error): lprint ('       maybe you mean "--"')
     logwrite ('       Calling parameters: '+str(sys.argv[1:]).replace("[","").replace("]",""))
@@ -442,14 +442,14 @@ if "--outdir" in argDict and not [True for arg in sys.argv[1:] if "--outdir" in 
     # my simple pre-initialization code to get basedir early doesn't
     lprint ('ERROR: Commandline option "--outdir" must be spelled out')
     usage(); exit(2)
-if argDict.has_key('-h'): usage(); help(); exit(0)   
-if argDict.has_key('--help'): usage(); help(); exit(0)  
-if argDict.has_key('-d'): debug = True  
-if argDict.has_key('--debug'): debug = True   
-if argDict.has_key('--version'): lprint (Program_name+' '+Program_version); exit(0)
-if argDict.has_key('--img'): Image_File=argDict['--img']; checkfile(Image_File)
-if argDict.has_key('--spec'): Spectro_File=argDict['--spec']; checkfile(Spectro_File)
-if argDict.has_key('--noseg'): nosegmentation=True
+if '-h' in argDict: usage(); help(); exit(0)   
+if '--help' in argDict: usage(); help(); exit(0)  
+if '-d' in argDict: debug = True  
+if '--debug' in argDict: debug = True   
+if '--version' in argDict: lprint (Program_name+' '+Program_version); exit(0)
+if '--img' in argDict: Image_File=argDict['--img']; checkfile(Image_File)
+if '--spec' in argDict: Spectro_File=argDict['--spec']; checkfile(Spectro_File)
+if '--noseg' in argDict: nosegmentation=True
 else: nosegmentation=False
 
 
@@ -536,7 +536,7 @@ else: #try to read spectro orientation from DICOM
     # some checks
     try: Modality=str(Dset.Modality) # must be MR           
     except: lprint ('ERROR:  Unable to determine DICOM Modality'); exit(1)
-    if Modality<>'MR': lprint ('DICOM Modality not MR'); exit(1)
+    if Modality!='MR': lprint ('DICOM Modality not MR'); exit(1)
     try: Manufacturer=str(Dset.Manufacturer) # currently Philips only
     except: lprint ('ERROR:  Unable to determine Manufacturer'); exit(1)
     if not Manufacturer.find("Philips")>=0: 
@@ -613,7 +613,7 @@ else:
 if not os.path.isfile(tempdir+'T1.nii'): lprint ('ERROR:  NIFTI file not found '); exit(1)
 command=resourcedir+'fslhd'; checkcommand(command)
 parameters=' "'+tempdir+'T1.nii"'
-output = run(command,parameters)
+output = run(command,parameters).decode('ascii')
 if not 'qform_name     Scanner Anat' in output: 
     lprint ('ERROR:  could not locate NIFTI information confirming neurological axial'); exit(1)
 if not 'qform_xorient  Left-to-Right' in output: 
@@ -635,7 +635,7 @@ if not 'sform_zorient  Inferior-to-Superior' in output:
 lprint ('Extracting transformation matrix from Image')
 command=resourcedir+'fslorient'; checkcommand(command)
 parameters=' -getqform "'+tempdir+'T1.nii"'
-output = run(command, parameters).split(' ')
+output = run(command, parameters).decode('ascii').split(' ')
 if len(output)!=17: lprint ('ERROR:  Problem reading qform form NIFTI '); exit(1)
 f = open(tempdir+'temp1.txt', 'w') # this matrix still contains scalings
 f.write(output[0]+space+output[1]+space+output[2]+space+output[3]+'\n') 
@@ -646,7 +646,7 @@ f.close()
 # this isolates the rotations/translations only, without the scalings (data is in lines 1-4)
 command=resourcedir+'avscale'; checkcommand(command)
 parameters=' "'+tempdir+'temp1.txt"'
-output = run(command, parameters).split('\n')
+output = run(command, parameters).decode('ascii').split('\n')
 f = open(tempdir+'ImageTransform_raw.mat', 'w')
 f.write(output[1]+'\n') 
 f.write(output[2]+'\n')
@@ -656,7 +656,7 @@ f.close()
 # get image dimensions
 command=resourcedir+'fslhd'; checkcommand(command)
 parameters=' "'+tempdir+'T1.nii"'
-output = run(command,parameters).split('\n')
+output = run(command,parameters).decode('ascii').split('\n')
 Image_size_X = int(_get_HDRvalue(output,'dim1'))
 Image_size_Y = int(_get_HDRvalue(output,'dim2'))
 Image_size_Z = int(_get_HDRvalue(output,'dim3'))
@@ -692,7 +692,7 @@ parameters+=' -inverse "'+tempdir+'Image2Isocenter.mat"'
 run(command,parameters)     
 # apply transformation (debug mode only)
 if debug:
-   print 'Applying   transformation matrix to NIFTI'
+   print ('Applying   transformation matrix to NIFTI')
    command=resourcedir+'flirt'; checkcommand(command)
    parameters=' -in "'+tempdir+'T1.nii" -ref "'+tempdir+'T1.nii"'
    parameters+=' -out "'+tempdir+'T1_Isocenter.nii"'
@@ -889,13 +889,13 @@ if not nosegmentation:
     # Extracting values
     command=resourcedir+'fslmeants'; checkcommand(command)
     parameters=' -i "'+tempdir+'T1_CSF.nii" -m "'+tempdir+'SpectroBOX.nii"'
-    output = run(command,parameters).split(' ')
+    output = run(command,parameters).decode('ascii').split(' ')
     CSF_frac=float(output[0])
     parameters=' -i "'+tempdir+'T1_GM.nii" -m "'+tempdir+'SpectroBOX.nii"'
-    output = run(command,parameters).split(' ')
+    output = run(command,parameters).decode('ascii').split(' ')
     GM_frac=float(output[0])
     parameters=' -i "'+tempdir+'T1_WM.nii" -m "'+tempdir+'SpectroBOX.nii"'
-    output = run(command,parameters).split(' ')
+    output = run(command,parameters).decode('ascii').split(' ')
     WM_frac=float(output[0])
     # normalize sum to 1.0 (raw outputs are always around 0.985, duno why)
     total=CSF_frac+GM_frac+WM_frac
@@ -966,4 +966,15 @@ if pywin32_installed:
     except: pass #silent
 if Interactive:
     if sys.platform=="win32": os.system("pause") # windows
-    else: os.system('read -s -n 1 -p "Press any key to continue...\n"') 
+    else: 
+        #os.system('read -s -n 1 -p "Press any key to continue...\n"')
+        import termios
+        print("Press any key to continue...")
+        fd = sys.stdin.fileno()
+        oldterm = termios.tcgetattr(fd)
+        newattr = termios.tcgetattr(fd)
+        newattr[3] = newattr[3] & ~termios.ICANON & ~termios.ECHO
+        termios.tcsetattr(fd, termios.TCSANOW, newattr)
+        try: result = sys.stdin.read(1)
+        except IOError: pass
+        finally: termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
