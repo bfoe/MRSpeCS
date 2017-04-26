@@ -1,0 +1,11 @@
+yet another version:
+====================
+
+this one includes segmentation with a priori probability maps
+used both as initialization and throughout the segmentation process
+
+Why: for comparison with SPM which works that way
+
+OBS: the standard space FSL probability maps are in
+     /usr/local/fsl/data/standard/tissuepriors/
+     for windows version copy the 6 files to the script dir
