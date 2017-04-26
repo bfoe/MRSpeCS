@@ -1,7 +1,7 @@
 For comparison of the MRSpeCS results (FSL) with SPM
 ====================================================
 
-!!! EXPERTS ONLY (become one;)
+!!! EXPERTS ONLY (become one;) 
 
     1) Run MRSpeCS.py
     2) Run SPM_Segment2.m
