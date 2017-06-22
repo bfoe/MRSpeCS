@@ -361,7 +361,8 @@ debug=False; NIFTI_Input=False; SPAR_Input=True
 Image_File=''; Spectro_File=''
 space=' '; slash='/'; 
 if sys.platform=="win32": slash='\\' # not really needed, but looks nicer ;)
-Program_name = os.path.basename(sys.argv[0]); Program_name = Program_name[:Program_name.find('.')]
+Program_name = os.path.basename(sys.argv[0]); 
+if Program_name.find('.')>0: Program_name = Program_name[:Program_name.find('.')]
 basedir = os.getcwd()+slash # current working directory is the default output directory 
 for arg in sys.argv[1:]: # look in command line arguments if the output directory specified
     if "--outdir" in arg: basedir = os.path.abspath(arg[arg.find('=')+1:])+slash #
@@ -426,10 +427,11 @@ if TK_installed:
 
 # parse commandline parameters (if present)
 try: opts, args =  getopt( sys.argv[1:],'hd',['help','version','debug','img=','spec=','outdir=','noseg'])
-except: 
-    lprint ('ERROR: Commandline '+str(error)+' (see logfile for details)')
-    if "-" in str(error) and not "--" in str(error): lprint ('       maybe you mean "--"')
-    logwrite ('       Calling parameters: '+str(sys.argv[1:]).replace("[","").replace("]",""))
+except:
+    error=str(sys.argv[1:]).replace("[","").replace("]","")
+    if "-" in str(error) and not "--" in str(error): 
+          lprint ('ERROR: Commandline '+str(error)+',   maybe you mean "--"')
+    else: lprint ('ERROR: Commandline '+str(error))
     usage(); exit(2)
 if len(args)>0: 
     lprint ('ERROR: Commandline option "'+args[0]+'" not recognized')
