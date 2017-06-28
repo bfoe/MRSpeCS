@@ -13,7 +13,7 @@ trigger=MRSpeCS_Results.txt
 # global log file in current working dir were all individual logfiles are joined
 global_log="All_"$trigger
 # processing command to execute
-processing_command="echo $i > $trigger" # substitute e.g. with "../MRSpeCS.py --img=3DT1.dcm --spec=spectro.SDAT >/dev/nul"
+processing_command='echo $i > $trigger' # substitute e.g. with './MRSpeCS.py --img=3DT1.dcm --spec=spectro.SDAT >/dev/nul'
 
 
 # ------------------- do not change anything beyond this line -------------------------------
