@@ -262,7 +262,7 @@ def _get_from_SPAR (input, varstring):
     else: lprint ('ERROR: unable to read parameter "'+varstring+'" in SPAR'); exit(1)
     return value
 def _get_HDRvalue (input, varstring):
-    value = [''.join(text.split(' ')[1:]) for text in input if text.split(' ')[0]==varstring]
+    value = [''.join(text.replace("\t"," ").split(' ')[1:]) for text in input if text.replace("\t"," ").split(' ')[0]==varstring]
     if len(value)==1: value = value[0]
     else: lprint ('ERROR: unable to read parameter "'+varstring+'" from NIFTI header'); exit(1)
     return value        
@@ -616,21 +616,23 @@ if not os.path.isfile(tempdir+'T1.nii'): lprint ('ERROR:  NIFTI file not found '
 command=resourcedir+'fslhd'; checkcommand(command)
 parameters=' "'+tempdir+'T1.nii"'
 output = run(command,parameters).decode('ascii')
-if not 'qform_name     Scanner Anat' in output: 
+output = output.replace("\t"," ")
+output = " ".join(output.split())
+if not 'qform_name Scanner Anat' in output: 
     lprint ('ERROR:  could not locate NIFTI information confirming neurological axial'); exit(1)
-if not 'qform_xorient  Left-to-Right' in output: 
+if not 'qform_xorient Left-to-Right' in output: 
     lprint ('ERROR:  could not locate NIFTI information confirming neurological axial'); exit(1)
-if not 'qform_yorient  Posterior-to-Anterior' in output: 
+if not 'qform_yorient Posterior-to-Anterior' in output: 
     lprint ('ERROR:  could not locate NIFTI information confirming neurological axial'); exit(1)
-if not 'qform_zorient  Inferior-to-Superior' in output: 
+if not 'qform_zorient Inferior-to-Superior' in output: 
     lprint ('ERROR:  could not locate NIFTI information confirming neurological axial'); exit(1)
-if not 'sform_name     Scanner Anat' in output: 
+if not 'sform_name Scanner Anat' in output: 
     lprint ('ERROR:  could not locate NIFTI information confirming neurological axial'); exit(1)
-if not 'sform_xorient  Left-to-Right' in output: 
+if not 'sform_xorient Left-to-Right' in output: 
     lprint ('ERROR:  could not locate NIFTI information confirming neurological axial'); exit(1)
-if not 'sform_yorient  Posterior-to-Anterior' in output: 
+if not 'sform_yorient Posterior-to-Anterior' in output: 
     lprint ('ERROR:  could not locate NIFTI information confirming neurological axial'); exit(1)
-if not 'sform_zorient  Inferior-to-Superior' in output: 
+if not 'sform_zorient Inferior-to-Superior' in output: 
     lprint ('ERROR:  could not locate NIFTI information confirming neurological axial'); exit(1)
 
 # ----- extract Image transformations -----
