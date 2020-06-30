@@ -38,7 +38,10 @@ depending on FSL version.
              NIFTI images manually converted from DICOM using the `dcm2nii` tool
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;![#f03c15](https://placehold.it/15/f03c15/000000?text=+) <b> Currently supports Philips formats only </b> ![#f03c15](https://placehold.it/15/f03c15/000000?text=+)
 
-    
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;If you need to process <b>Siemens</b> MRS data<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;have a look into <b>FSL-MRS</b> which can be found at:<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;https://git.fmrib.ox.ac.uk/fsl/fsl_mrs
+
 ##
 ### License:
 GPL, see details inside `MRSpeCS.py`
