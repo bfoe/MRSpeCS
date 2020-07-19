@@ -1,8 +1,8 @@
 # -*- mode: python -*-
 a = Analysis(['..\MRSpeCS.py'],
              excludes=[ 'win32pdh','win32pipe',
-                        'select', 'pydoc', 'pickle', '_hashlib', '_ssl',
-                        'setuptools','pyexpat'],
+                        'pydoc', '_hashlib', '_ssl',
+                        'setuptools'],
              hiddenimports=[],
              hookspath=None,
              runtime_hooks=None)
@@ -44,6 +44,6 @@ exe = EXE(pyz,
           name='MRSpeCS.exe',
           debug=False,
           strip=None,
-          upx=True,
+          upx=False,
           console=True, icon='MRSpeCS.ico')          
 
