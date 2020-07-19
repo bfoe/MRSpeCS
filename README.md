@@ -43,6 +43,10 @@ depending on FSL version.
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;https://git.fmrib.ox.ac.uk/fsl/fsl_mrs
 
 ##
+### PDF report generation 
+requires additional libraries: nibabel, pillow, fpdf2
+![ReportExample](https://github.com/bfoe/MRSpeCS/blob/master/ReportExample.jpg)
+##
 ### License:
 GPL, see details inside `MRSpeCS.py`
 

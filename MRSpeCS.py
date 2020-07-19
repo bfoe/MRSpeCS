@@ -148,7 +148,7 @@
 #
 
 
-Program_version = "v0.7" # program version
+Program_version = "v0.8" # program version
 
 
 import sys
@@ -163,6 +163,9 @@ import datetime
 from getopt import getopt
 from getopt import GetoptError
 from distutils.version import LooseVersion
+try: from MRSpeCS_Report import MRSpeCS_Report
+except: pass
+
 
 TK_installed=True
 try: from tkFileDialog import askopenfilename # Python 2
@@ -932,6 +935,10 @@ if not nosegmentation:
     f.write(basedir+' \n') 
     f.close()
 
+try: 
+    MRSpeCS_Report(tempdir+'T1.nii', tempdir+'SpectroBOX.nii', tempdir+Program_name+'_Results.txt' , tempdir+Program_name+"_Report.pdf")
+    lprint ("PDF report generated")
+except: lprint ("PDF report generation failed")
 
 # name collision detection
 stp=''
@@ -943,9 +950,11 @@ if os.path.isfile(basedir+'T1_CSF.nii'): stp=timestamp+ID+'_'
 if os.path.isfile(basedir+'T1_GM.nii'): stp=timestamp+ID+'_'
 if os.path.isfile(basedir+'T1_WM.nii'): stp=timestamp+ID+'_'
 if os.path.isfile(basedir+Program_name+'_Results.txt'): stp=timestamp+ID+'_'
+if os.path.isfile(basedir+Program_name+'_Report.pdf'): stp=timestamp+ID+'_'
 # get output results
 copy (tempdir+'T1.nii', basedir+stp+'T1.nii')
 copy (tempdir+'SpectroBOX.nii', basedir+stp+'SpectroBOX.nii')
+copy (tempdir+Program_name+"_Report.pdf", basedir+stp+Program_name+'_Report.pdf')
 if debug: 
     copy(tempdir+'T1_Isocenter.nii', basedir+stp+'T1_Isocenter.nii')
     copy(tempdir+'SpectroBOX_Isocenter.nii', basedir+stp+'SpectroBOX_Isocenter.nii')
