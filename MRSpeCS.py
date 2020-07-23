@@ -179,9 +179,11 @@ except:
 
 FNULL = open(os.devnull, 'w')
 old_target, sys.stderr = sys.stderr, FNULL # replace sys.stdout 
-pydicom_installed=True
-try: import dicom
-except: pydicom_installed=False
+pydicom_installed=False
+try: import dicom; pydicom_installed=True  # <v1.0
+except: pass
+try: import pydicom as dicom; pydicom_installed=True#  >v1.0
+except: pass
 sys.stderr = old_target # re-enable
 
 pywin32_installed=True
