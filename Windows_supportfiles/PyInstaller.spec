@@ -1,8 +1,10 @@
 # -*- mode: python -*-
 a = Analysis(['..\MRSpeCS.py'],
-             excludes=[ 'win32pdh','win32pipe',
-                        'pydoc', '_hashlib', '_ssl',
-                        'setuptools'],
+             excludes=['lib2to3', 'win32com', 'unicodedata', 'PIL._webp', 'PIL._imagingtk',
+                       'scipy', '_ssl', '_hashlib', '_elementtree', '_decimal', '_lzma',
+                       'pydoc', '_hashlib', '_ssl',
+                       'win32pdh','win32pipe', 'win32api', 'win32evtlog', 'win32wnet', '_testcapi'
+                       'setuptools'],
              hiddenimports=[],
              hookspath=None,
              runtime_hooks=None)
@@ -27,14 +29,14 @@ a.datas = [x for x in a.datas if not ('mpl-data\\fonts' in os.path.dirname(x[1])
 a.datas = [x for x in a.datas if not ('mpl-data\fonts' in os.path.dirname(x[1]))]                     
 a.datas = [x for x in a.datas if not ('mpl-data\\sample_data' in os.path.dirname(x[1]))]            
 a.datas = [x for x in a.datas if not ('mpl-data\sample_data' in os.path.dirname(x[1]))]            
-a.datas = [x for x in a.datas if not ('tk8.5\msgs' in os.path.dirname(x[1]))]            
-a.datas = [x for x in a.datas if not ('tk8.5\images' in os.path.dirname(x[1]))]            
-a.datas = [x for x in a.datas if not ('tk8.5\demos' in os.path.dirname(x[1]))]            
-a.datas = [x for x in a.datas if not ('tcl8.5\opt0.4' in os.path.dirname(x[1]))]            
-a.datas = [x for x in a.datas if not ('tcl8.5\http1.0' in os.path.dirname(x[1]))]            
-a.datas = [x for x in a.datas if not ('tcl8.5\encoding' in os.path.dirname(x[1]))]            
-a.datas = [x for x in a.datas if not ('tcl8.5\msgs' in os.path.dirname(x[1]))]            
-a.datas = [x for x in a.datas if not ('tcl8.5\tzdata' in os.path.dirname(x[1]))]            
+a.datas = [x for x in a.datas if not ('tk8.6\msgs' in os.path.dirname(x[1]))]            
+a.datas = [x for x in a.datas if not ('tk8.6\images' in os.path.dirname(x[1]))]            
+a.datas = [x for x in a.datas if not ('tk8.6\demos' in os.path.dirname(x[1]))]            
+a.datas = [x for x in a.datas if not ('tcl8.6\opt0.4' in os.path.dirname(x[1]))]            
+a.datas = [x for x in a.datas if not ('tcl8.6\http1.0' in os.path.dirname(x[1]))]            
+a.datas = [x for x in a.datas if not ('tcl8.6\encoding' in os.path.dirname(x[1]))]            
+a.datas = [x for x in a.datas if not ('tcl8.6\msgs' in os.path.dirname(x[1]))]            
+a.datas = [x for x in a.datas if not ('tcl8.6\\tzdata' in os.path.dirname(x[1]))]            
 pyz = PYZ(a.pure)
 exe = EXE(pyz,
           a.scripts,
